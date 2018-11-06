@@ -155,8 +155,8 @@ constructor() {
   async validateChain(){
     let errorLog = [];
     const height = await this.getBlockHeight();
-    let blockHash = null;
-    let previousHash = null;
+    let blockHash = '';
+    let previousHash = '';
     for (var i = 0; i < height; i++) {
       // validate block
       if (!await this.validateBlock(i))errorLog.push(i);
@@ -164,7 +164,7 @@ constructor() {
       // get block with key=i
       let block = await this.getBlock(i);
       previousHash = block.previousBlockHash;
-      if (i!==0 && blockHash!==previousHash) {
+      if (blockHash!==previousHash) {
         // compare blocks hash link
         // except for genesis block
           errorLog.push(i);

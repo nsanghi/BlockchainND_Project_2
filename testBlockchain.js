@@ -41,17 +41,14 @@ async function modifyBlock(chain) {
 setTimeout(async () => {
   //init block chain with genesis block
   let blockchain = await new Blockchain();
-  await printChain(blockchain, 0);
   await createChain(blockchain, 0);
   console.log('');
   console.log('Block chain created');
   console.log('');
   console.log('Printing block chain data...');
-  console.log('');
   await printChain(blockchain, 0);
   console.log('');
   console.log('Validating blockchain....');
-  console.log('');
   await blockchain.validateChain();
   console.log('');
   console.log('Modifying data in block 1...');
@@ -64,6 +61,7 @@ setTimeout(async () => {
   console.log('');
   console.log('Validating blockchain after modification...')
   await blockchain.validateChain();
+  console.log('');
   console.log('Creating a new instance of blcokchain...')
   let blockchain_2 = await new Blockchain();
   console.log('Printing block chain - only one Gneesis block is created')
