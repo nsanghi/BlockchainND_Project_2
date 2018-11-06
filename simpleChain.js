@@ -33,8 +33,20 @@ class Block{
 |  ================================================*/
 
 class Blockchain {
-  constructor() {
-    this.addGenesisBlock();
+
+constructor() {
+    return (async () => {
+      try {
+        const height = await this.getBlockHeight();
+      // if no genesis block, add that
+        if (height === 0) {
+          await this.addGenesisBlock();
+        }
+      } catch(err) {
+        console.log("Error in init: "+ err);
+      }
+      return this;
+    })();
   }
 
   async addGenesisBlock() {

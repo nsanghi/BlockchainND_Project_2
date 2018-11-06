@@ -5,29 +5,29 @@ const Blockchain = BlockchainClasses.Blockchain;
 
 
 //add "i" blocks to chain
-async function createChain(n) {
+async function createChain(chain, n) {
   let newBlock = new Block("Test Block - " + (n + 1));
-  await blockchain.addBlock(newBlock);
+  await chain.addBlock(newBlock);
   if (n < 10) {
-    await createChain(n+1);
+    await createChain(chain, n+1);
   }
 }
 
 
 //print chain
-async function printChain(n) {
-  let val = await blockchain.getBlock(n);
+async function printChain(chain, n) {
+  let val = await chain.getBlock(n);
   console.log(val);
   if (n < 10) {
-    await printChain(n+1);
+    await printChain(chain, n+1);
   }
 }
 
-async function modifyBlock() {
+async function modifyBlock(chain) {
   const key = 1;
-  let block = await blockchain.getBlock(key);
+  let block = await chain.getBlock(key);
   block.body = "Modified Data";
-  await blockchain.putBlock(key, block);
+  await chain.putBlock(key, block);
 }
 /*=====  Testing the functionality =========================|
 | add 10 new blcoks to chain                                |
@@ -37,17 +37,18 @@ async function modifyBlock() {
 | revalidate chain                                          |
 |+=====  Testing the functionality ========================*/
 
-//init block chain with genesis block
-const blockchain = new Blockchain();
 
 setTimeout(async () => {
-  await createChain(0);
+  //init block chain with genesis block
+  let blockchain = await new Blockchain();
+  await printChain(blockchain, 0);
+  await createChain(blockchain, 0);
   console.log('');
   console.log('Block chain created');
   console.log('');
   console.log('Printing block chain data...');
   console.log('');
-  await printChain(0);
+  await printChain(blockchain, 0);
   console.log('');
   console.log('Validating blockchain....');
   console.log('');
@@ -57,11 +58,14 @@ setTimeout(async () => {
   console.log('data before modification...');
   console.log(await blockchain.getBlock(1));
   console.log('');
-  await modifyBlock();
+  await modifyBlock(blockchain);
   console.log("data after modification...");
   console.log(await blockchain.getBlock(1));
   console.log('');
   console.log('Validating blockchain after modification...')
   await blockchain.validateChain();
-}, 10000);
-
+  console.log('Creating a new instance of blcokchain...')
+  let blockchain_2 = await new Blockchain();
+  console.log('Printing block chain - only one Gneesis block is created')
+  await printChain(blockchain_2, 0);
+}, 1000);
