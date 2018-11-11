@@ -12,50 +12,41 @@ Installing Node and NPM is pretty straightforward using the installer package av
 
 ### Configuring your project
 
-- Use NPM to initialize your project and create package.json to store project dependencies.
+- Use NPM to install all the project dependencies.
 ```
-npm init
+npm install
 ```
-- Install crypto-js with --save flag to save dependency to our package.json file
-```
-npm install crypto-js --save
-```
-- Install level with --save flag
-```
-npm install level --save
-```
+- This project depends on following packages
+    - [`crypto-js`](https://www.npmjs.com/package/crypto-js) - Code uses SHA256 hasing from this package
+    - [`level db`](https://github.com/Level/levelup) - to provide a key/value persistence store
+
+## Code Explanation
+In this project a simple private blockchain is implemented with functionality to create new blocks and add them to block chain. The data is persisted in `leveldb` database. Additional functionality includes ability to validate individual blocks or the entire blockchain. 
+
+`simpleChain.js` contains the complete code. `simpleChainOriginal.js` contains the starter code. You can use starter code to implement the following functionality. Complete Solution is contained in file `simpleChain.js`
+
+1. Starter code right now uses an array to persist the code. Please modify the code to persist the data into an instance of levelDB database. 
+2. `addBlock(newBlock)` function includes a method to store newBlock with LevelDB.
+3. Genesis block persists as the first block in the blockchain using LevelDB. Additionally, when adding a new block to the chain, code checks if a Genesis block already exists. If not, one is created before adding the a block.
+4. Modify the `validateBlock()` function to validate a block stored within levelDB.
+5. Modify the `validateChain()` function to validate blockchain stored within levelDB.
+6. Modify `getBlock()` function to retrieve a block by it's block height within the LevelDB chain.
+7. Modify `getBlockHeight()` function to retrieve current block height within the LevelDB chain.
 
 ## Testing
 
 To test code:
-1: Open a command prompt or shell terminal after install node.js.
-2: Enter a node session, also known as REPL (Read-Evaluate-Print-Loop).
+1: Open a command prompt or shell terminal after installing node.js.
+
+2: Run the test cases in file `testBlockchain.js` using following command:
 ```
-node
+node testBlockchain.js
 ```
-3: Copy and paste your code into your node session
-4: Instantiate blockchain with blockchain variable
-```
-let blockchain = new Blockchain();
-```
-5: Generate 10 blocks using a for loop
-```
-for (var i = 0; i <= 10; i++) {
-  blockchain.addBlock(new Block("test data "+i));
-}
-```
-6: Validate blockchain
-```
-blockchain.validateChain();
-```
-7: Induce errors by changing block data
-```
-let inducedErrorBlocks = [2,4,7];
-for (var i = 0; i < inducedErrorBlocks.length; i++) {
-  blockchain.chain[inducedErrorBlocks[i]].data='induced chain error';
-}
-```
-8: Validate blockchain. The chain should now fail with blocks 2,4, and 7.
-```
-blockchain.validateChain();
-```
+
+Testing sequence follows as follows:
+    - create Blockchain instance
+    - Insert 10 new blocks into the chain
+    - print the data in entire blockchain
+    - validate the chain
+    - modify data(tamper) in one of the blocks
+    - revalidate chain and see validation failing for modified block 
